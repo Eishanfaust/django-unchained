@@ -1,4 +1,3 @@
-# orbit/views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions, generics
@@ -6,6 +5,8 @@ from .models import CustomUser
 from .serializers import CustomUserSerializer
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
+from django.shortcuts import render
+
 # public access
 class CustomUserList(generics.ListAPIView):
     queryset = CustomUser.objects.all()
@@ -51,5 +52,9 @@ class CustomUserCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 from django.http import HttpResponse
 
+
 def home(request):
-    return HttpResponse("Welcome to backend_task API!")
+    return render(request, 'home.html')
+
+def user_dashboard(request):
+    return render(request, 'user-dashboard.html')

@@ -1,12 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from orbit.views import home
+from orbit.views import home, user_dashboard
 
 urlpatterns = [
-    path('', home, name='home'),  # Homepage
+    path('', home, name='home'),  # Homepage can stay here or in app urls
     path('admin/', admin.site.urls),
-    path('api/', include('orbit.urls', namespace='orbit')),  # Orbit app APIs
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # JWT obtain
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # JWT refresh
+     path('api/', include('orbit.urls', namespace='orbit')), 
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), 
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
