@@ -47,7 +47,6 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
-    # Basic fields
     country = models.CharField(max_length=100, blank=True)
     bio = models.TextField(blank=True)
     phone_number = models.CharField(max_length=20, blank=True)
@@ -60,11 +59,9 @@ class CustomUser(AbstractUser):
     )
     birthday = models.DateField(blank=True, null=True)
     
-    # GIS fields
     home_address = gis_models.PointField(null=True, blank=True, srid=4326)
     office_address = gis_models.PointField(null=True, blank=True, srid=4326)
     
-    # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -106,17 +103,17 @@ class CustomUser(AbstractUser):
         if self.birthday and self.birthday > date.today():
             raise ValidationError("Birthday cannot be in the future")
         if self.documents:
-            # Add file validation if needed
+            #file validation if needed
             pass
     
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
         
-        # Create or update UserRoute if both addresses exist
+        # if both addresses exist
         if self.has_complete_address:
             route, created = UserRoute.objects.get_or_create(user=self)
-            route.save()  # This will trigger the route calculation
+            route.save()  #route calculation
 
 
 class UserRoute(models.Model):
@@ -145,8 +142,7 @@ class UserRoute(models.Model):
     def distance_km(self):
         """Get route distance in kilometers"""
         if self.route:
-            return self.route.length * 111.319  # Convert degrees to km
-        return None
+            return self.route.length * 111.319  #distance-conversion
     
     def to_geojson(self):
         """Convert route to GeoJSON format"""

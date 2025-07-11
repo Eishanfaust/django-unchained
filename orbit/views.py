@@ -12,7 +12,7 @@ from django.http import JsonResponse
 from .models import CustomUser, UserRoute
 from .serializers import CustomUserSerializer, UserRouteSerializer
 
-# User CRUD Views
+# CRUD for non-admin users
 class CustomUserListView(generics.ListAPIView):
     """Public API to list all users"""
     queryset = CustomUser.objects.all()
@@ -38,7 +38,7 @@ class CustomUserDetailView(APIView):
         return Response(serializer.data)
 
     def patch(self, request, pk):
-        # Only allow user to edit their own account
+        #allow user to edit their own account
         if request.user.pk != pk:
             return Response(
                 {'detail': 'You do not have permission to edit this user.'},
@@ -63,7 +63,7 @@ class CustomUserDetailView(APIView):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# GeoJSON API for user routes
+#user's route
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_route_geojson(request, user_id):
@@ -87,7 +87,7 @@ def user_route_geojson(request, user_id):
             status=status.HTTP_404_NOT_FOUND
         )
 
-# Nearby users API
+#nearby users
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def users_nearby(request):
@@ -104,7 +104,7 @@ def users_nearby(request):
 
     user_location = Point(lng, lat, srid=4326)
     
-    # Get users within radius
+    #get users
     nearby_users = CustomUser.objects.users_within_radius(user_location, radius_km)
     nearby_users = nearby_users.annotate(
         distance=Distance('home_address', user_location)
@@ -118,7 +118,7 @@ def users_nearby(request):
         'users': serializer.data
     })
 
-# Template views
+#templates
 def home(request):
     """Home page view"""
     return render(request, 'home.html')
