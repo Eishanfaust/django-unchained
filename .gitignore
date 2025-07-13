@@ -22,7 +22,6 @@ celerybeat.pid
 logs/
 
 /djenv/
-/venv/
 
 
 
